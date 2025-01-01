@@ -1,66 +1,50 @@
-/* Carousel outer container */
+/* Outer carousel container */
 .carousel {
     position: relative;
     width: 100%;
-    max-width: 960px; /* Adjust as needed */
+    max-width: 960px;
     margin: 0 auto;
     overflow: hidden;
+    background: #fff;
   }
   
-  /* Track that holds all slides side by side */
+  /* The “track” for all slides */
   .carousel-track {
     display: flex;
-    transition: transform 0.4s ease-in-out;
+    transition: transform 0.3s ease-in-out;
   }
   
-  /* Each slide takes full width */
+  /* Each slide is 100% width */
   .carousel-slide {
     flex: 0 0 100%;
     box-sizing: border-box;
-    /* Lay out content vertically (text above image) */
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
     padding: 1rem;
+    text-align: center;
   }
   
-  /* If you have heading or paragraph tags in your "text" column, style them as needed */
-  .carousel-slide .carousel-text {
-    margin-bottom: 1rem; /* spacing before the image */
-    text-align: center;  /* or left, as you prefer */
-  }
-  
-  /* Image styling */
-  .carousel-slide img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  /* Carousel next/prev controls */
+  /* Buttons container */
   .carousel-controls {
     position: absolute;
     top: 50%;
     width: 100%;
     height: 0;
+    transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
-    transform: translateY(-50%);
-    pointer-events: none; /* So only the buttons themselves are clickable */
+    pointer-events: none; /* So that only the buttons themselves are clickable */
   }
   
+  /* Buttons themselves */
   .carousel-button {
     pointer-events: auto;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0,0,0,0.3);
     color: #fff;
-    border: none;
     font-size: 1.2rem;
+    border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    transition: background-color 0.2s;
   }
-  
   .carousel-button:hover {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0,0,0,0.5);
   }
   

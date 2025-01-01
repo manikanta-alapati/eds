@@ -1,110 +1,74 @@
-/**
- * decorateCarousel(block)
- *  - Reorganizes each row (from the Google Docs table) into a “slide.”
- *  - Ensures text is above the image (by reordering columns or using flex).
- *  - Adds prev/next buttons labeled "<<", ">>".
- */
-
 export default function decorateCarousel(block) {
-    // 1. Gather the slide “rows”
-    const slides = Array.from(block.children);
+    // 1. Get all rows from the block (each row is a <div>)
+    const rows = Array.from(block.children);
   
-    // Create a container track
+    // 2. The FIRST row is your "Next" button (>>)
+    //    The LAST row is your "Previous" button (<<)
+    //    Everything in between is a slide.
+    const nextRow = rows.shift(); // first row
+    const prevRow = rows.pop();   // last row
+  
+    // Now the remaining rows are your actual slides
+    const slides = rows;
+  
+    // 3. Build the carousel track
     const track = document.createElement('div');
     track.className = 'carousel-track';
   
+    // Move each “slide row” into the track
     slides.forEach((slide) => {
       slide.classList.add('carousel-slide');
-  
-      // Identify the 2 columns: text (col 0) and image (col 1) – or vice versa 
-      const columns = Array.from(slide.children);
-      if (columns.length === 2) {
-        const [col1, col2] = columns;
-  
-        // Check if col1 or col2 contains an <img>. Decide which is text vs. image
-        const img1 = col1.querySelector('img');
-        const img2 = col2.querySelector('img');
-  
-        let textCol;
-        let imgCol;
-  
-        // If col1 has the image, then col2 is text
-        if (img1) {
-          imgCol = col1;
-          textCol = col2;
-        } else if (img2) {
-          textCol = col1;
-          imgCol = col2;
-        } else {
-          // Fallback: assume first column is text, second is image
-          textCol = col1;
-          imgCol = col2;
-        }
-  
-        // Clear the slide's original contents
-        slide.innerHTML = '';
-  
-        // Add text first
-        textCol.classList.add('carousel-text');
-        slide.appendChild(textCol);
-  
-        // Add image second
-        slide.appendChild(imgCol);
-      }
-  
-      // Append the rearranged slide to the track
       track.appendChild(slide);
     });
   
-    // 2. Create a wrapper .carousel
-    const container = document.createElement('div');
-    container.className = 'carousel';
-    container.appendChild(track);
+    // 4. Create the .carousel container
+    const carouselContainer = document.createElement('div');
+    carouselContainer.className = 'carousel';
+    carouselContainer.appendChild(track);
   
-    // Replace block contents with the carousel container
+    // Replace the block’s HTML with our new structure
     block.innerHTML = '';
-    block.appendChild(container);
+    block.appendChild(carouselContainer);
   
-    // 3. Add next/prev buttons
+    // 5. Create a controls container
     const controls = document.createElement('div');
     controls.className = 'carousel-controls';
   
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'carousel-button carousel-prev';
-    prevBtn.innerText = '<<';  // Updated label
+    // 6. Build the actual button elements from the row text
+    //    If your Docs row literally has >> for the first row, then nextRow.innerText should be ">>"
+    const nextButton = document.createElement('button');
+    nextButton.className = 'carousel-button carousel-next';
+    nextButton.textContent = nextRow?.innerText.trim() || '>>'; // fallback if empty
   
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'carousel-button carousel-next';
-    nextBtn.innerText = '>>';  // Updated label
+    const prevButton = document.createElement('button');
+    prevButton.className = 'carousel-button carousel-prev';
+    prevButton.textContent = prevRow?.innerText.trim() || '<<'; // fallback if empty
   
-    controls.appendChild(prevBtn);
-    controls.appendChild(nextBtn);
-    container.appendChild(controls);
+    controls.appendChild(prevButton);
+    controls.appendChild(nextButton);
+    carouselContainer.appendChild(controls);
   
-    // 4. Simple slide logic
-    const totalSlides = slides.length;
+    // 7. Simple slide logic
     let currentIndex = 0;
+    const totalSlides = slides.length;
   
     function showSlide(index) {
-      // Wrap around if index is out of bounds
       if (index < 0) index = totalSlides - 1;
       if (index >= totalSlides) index = 0;
-  
-      const offset = -(index * 100);
-      track.style.transform = `translateX(${offset}%)`;
+      track.style.transform = `translateX(-${index * 100}%)`;
       currentIndex = index;
     }
   
-    // 5. Button events
-    prevBtn.addEventListener('click', () => {
+    // 8. Button events
+    prevButton.addEventListener('click', () => {
       showSlide(currentIndex - 1);
     });
   
-    nextBtn.addEventListener('click', () => {
+    nextButton.addEventListener('click', () => {
       showSlide(currentIndex + 1);
     });
   
-    // 6. Start on the first slide
+    // Initialize
     showSlide(0);
   }
   
