@@ -2,49 +2,69 @@
 .carousel {
     position: relative;
     width: 100%;
-    max-width: 960px;
+    max-width: 960px; /* Adjust as needed */
     margin: 0 auto;
     overflow: hidden;
-    background: #fff;
   }
   
-  /* The “track” for all slides */
+  /* The track that holds all the slides side by side */
   .carousel-track {
     display: flex;
     transition: transform 0.3s ease-in-out;
   }
   
-  /* Each slide is 100% width */
+  /* Each slide takes the full width */
   .carousel-slide {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding: 1rem;
-    text-align: center;
+    /* Stack content vertically: image, then text. */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;
   }
   
-  /* Buttons container */
+  /* If you want text below the image, style your columns carefully */
+  .carousel-slide > div {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  /* The image can be scaled to fit the slide’s width */
+  .carousel-slide img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Controls container for the prev/next buttons */
   .carousel-controls {
     position: absolute;
-    top: 50%;
-    width: 100%;
-    height: 0;
+    top: 50%; /* vertically center */
+    left: 0;
+    right: 0;
+    height: 0; 
     transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
-    pointer-events: none; /* So that only the buttons themselves are clickable */
+    pointer-events: none; /* so only buttons are clickable */
+    z-index: 10;          /* ensure buttons are above images */
   }
   
-  /* Buttons themselves */
+  /* Style the buttons themselves */
   .carousel-button {
-    pointer-events: auto;
-    background-color: rgba(0,0,0,0.3);
+    pointer-events: auto; /* allow clicks */
+    border: none;
+    background-color: rgba(0, 0, 0, 0.3);
     color: #fff;
     font-size: 1.2rem;
-    border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
+    transition: background-color 0.2s;
   }
+  
   .carousel-button:hover {
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
   
