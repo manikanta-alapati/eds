@@ -1,87 +1,101 @@
 /**
  * decorateCarousel(block)
- *  - Reads the rows (originally from a table in Google Docs) and transforms them into a “slide” structure.
- *  - Wraps those slides in a ‘track’.
- *  - Adds next/prev arrows that shift the track’s transform to move between slides.
+ *  - Reorganizes each row (from the Google Docs table) into a “slide.”
+ *  - Ensures text is above the image (by reordering columns or using flex).
+ *  - Adds prev/next buttons labeled "<<", ">>".
  */
 
 export default function decorateCarousel(block) {
-    // 1. Gather the slide "rows" (each <div> in the block)
+    // 1. Gather the slide “rows”
     const slides = Array.from(block.children);
   
-    // Create a container (track) and move the slides into it
+    // Create a container track
     const track = document.createElement('div');
     track.className = 'carousel-track';
   
-    // Move each row into the track, give it a "slide" class
     slides.forEach((slide) => {
       slide.classList.add('carousel-slide');
   
-      // If the row uses a two-column table with an image and text, you can further refine structure
-      // For example, wrap the second column in a .carousel-slide-content
+      // Identify the 2 columns: text (col 0) and image (col 1) – or vice versa 
       const columns = Array.from(slide.children);
       if (columns.length === 2) {
-        const imgCol = columns[0];
-        const textCol = columns[1];
+        const [col1, col2] = columns;
   
-        // If the first column is an image, ensure it’s an <img> tag
-        const maybeImg = imgCol.querySelector('img');
-        if (maybeImg) {
-          maybeImg.style.width = '100%'; // or any styling you want
+        // Check if col1 or col2 contains an <img>. Decide which is text vs. image
+        const img1 = col1.querySelector('img');
+        const img2 = col2.querySelector('img');
+  
+        let textCol;
+        let imgCol;
+  
+        // If col1 has the image, then col2 is text
+        if (img1) {
+          imgCol = col1;
+          textCol = col2;
+        } else if (img2) {
+          textCol = col1;
+          imgCol = col2;
+        } else {
+          // Fallback: assume first column is text, second is image
+          textCol = col1;
+          imgCol = col2;
         }
-        // Wrap text col in a content div for styling
-        const contentWrap = document.createElement('div');
-        contentWrap.className = 'carousel-slide-content';
-        // Move textCol’s children into contentWrap
-        while (textCol.firstChild) {
-          contentWrap.appendChild(textCol.firstChild);
-        }
-        textCol.appendChild(contentWrap);
+  
+        // Clear the slide's original contents
+        slide.innerHTML = '';
+  
+        // Add text first
+        textCol.classList.add('carousel-text');
+        slide.appendChild(textCol);
+  
+        // Add image second
+        slide.appendChild(imgCol);
       }
   
+      // Append the rearranged slide to the track
       track.appendChild(slide);
     });
   
-    // 2. Create a wrapper around the track for overflow control
+    // 2. Create a wrapper .carousel
     const container = document.createElement('div');
     container.className = 'carousel';
     container.appendChild(track);
   
-    // 3. Insert the container back into the block
+    // Replace block contents with the carousel container
     block.innerHTML = '';
     block.appendChild(container);
   
-    // 4. Create next/prev buttons
+    // 3. Add next/prev buttons
     const controls = document.createElement('div');
     controls.className = 'carousel-controls';
   
     const prevBtn = document.createElement('button');
     prevBtn.className = 'carousel-button carousel-prev';
-    prevBtn.innerText = '‹'; // or use an icon
+    prevBtn.innerText = '<<';  // Updated label
   
     const nextBtn = document.createElement('button');
     nextBtn.className = 'carousel-button carousel-next';
-    nextBtn.innerText = '›'; // or use an icon
+    nextBtn.innerText = '>>';  // Updated label
   
     controls.appendChild(prevBtn);
     controls.appendChild(nextBtn);
     container.appendChild(controls);
   
-    // 5. Slide logic
+    // 4. Simple slide logic
+    const totalSlides = slides.length;
     let currentIndex = 0;
   
     function showSlide(index) {
-      // Bound the index to valid slides
-      if (index < 0) index = slides.length - 1;
-      if (index >= slides.length) index = 0;
+      // Wrap around if index is out of bounds
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
   
-      // Move the track
       const offset = -(index * 100);
       track.style.transform = `translateX(${offset}%)`;
       currentIndex = index;
     }
   
-    // 6. Button event listeners
+    // 5. Button events
     prevBtn.addEventListener('click', () => {
       showSlide(currentIndex - 1);
     });
@@ -90,7 +104,7 @@ export default function decorateCarousel(block) {
       showSlide(currentIndex + 1);
     });
   
-    // 7. Start on slide 0
+    // 6. Start on the first slide
     showSlide(0);
   }
   

@@ -1,41 +1,43 @@
-/* Basic container styling */
+/* Carousel outer container */
 .carousel {
     position: relative;
     width: 100%;
-    max-width: 960px; /* adjust as needed */
+    max-width: 960px; /* Adjust as needed */
     margin: 0 auto;
     overflow: hidden;
   }
   
-  /* The “track” that holds the slides */
+  /* Track that holds all slides side by side */
   .carousel-track {
     display: flex;
     transition: transform 0.4s ease-in-out;
   }
   
-  /* Each individual slide */
+  /* Each slide takes full width */
   .carousel-slide {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding: 1rem;
+    /* Lay out content vertically (text above image) */
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
+    flex-direction: column; 
+    align-items: center; 
+    padding: 1rem;
   }
   
-  /* Example styling for the image on the left and text on the right */
+  /* If you have heading or paragraph tags in your "text" column, style them as needed */
+  .carousel-slide .carousel-text {
+    margin-bottom: 1rem; /* spacing before the image */
+    text-align: center;  /* or left, as you prefer */
+  }
+  
+  /* Image styling */
   .carousel-slide img {
-    max-width: 300px;
-    margin-right: 1rem;
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
   
-  .carousel-slide-content {
-    flex: 1;
-  }
-  
-  /* Carousel buttons */
+  /* Carousel next/prev controls */
   .carousel-controls {
     position: absolute;
     top: 50%;
@@ -44,11 +46,11 @@
     display: flex;
     justify-content: space-between;
     transform: translateY(-50%);
-    pointer-events: none; /* So that only buttons are clickable */
+    pointer-events: none; /* So only the buttons themselves are clickable */
   }
   
   .carousel-button {
-    pointer-events: auto; /* re-enable pointer events for the buttons */
+    pointer-events: auto;
     background-color: rgba(0, 0, 0, 0.3);
     color: #fff;
     border: none;
