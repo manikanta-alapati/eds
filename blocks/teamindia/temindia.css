@@ -1,0 +1,42 @@
+/**
+ * teamindia.css
+ *
+ * Styles for the Team India (cricket) block.
+ */
+
+/* 
+  The block container. 
+  Depending on your Franklin project setup, the block class might be something 
+  like .block.teamindia or .block--teamindia. Adjust as needed. 
+*/
+.block.teamindia {
+    padding: 1rem;
+    background: #f9f9f9;
+  }
+  
+  /* The table itself */
+  .team-india-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    margin-top: 1rem;
+  }
+  
+  /* Table header styling */
+  .team-india-table thead {
+    background-color: #1e90ff;
+    color: #fff;
+  }
+  
+  .team-india-table th,
+  .team-india-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  /* Hover effect for rows */
+  .team-india-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
